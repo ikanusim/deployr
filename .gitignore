@@ -1,0 +1,5 @@
+status.yml
+tmp/*
+*.sql
+app_cached-copy
+blog_cached-copy

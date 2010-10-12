@@ -1,0 +1,15 @@
+production: &production
+  cookie_domain:  .<%= branch %>.<%= domain %>
+  app_url:        "http://www.<%= branch %>.<%= domain %>"
+  memcached_server:   localhost
+  dummy_attachments: true
+
+staging:
+  <<: *production
+
+development:
+  <<: *production
+
+test:
+  <<: *production
+  dummy_attachments: false

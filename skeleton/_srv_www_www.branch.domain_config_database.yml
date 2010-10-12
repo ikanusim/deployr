@@ -1,0 +1,17 @@
+production: &production
+  adapter: mysql
+  database: <%= branch %>_development
+  username: root
+  host: localhost
+  encoding: utf8
+  password:
+
+staging:
+  <<: *production
+
+development:
+  <<: *production
+
+test:
+  <<: *production
+  database: <%= branch %>_test<%%= ENV['TEST_ENV_NUMBER'] %>

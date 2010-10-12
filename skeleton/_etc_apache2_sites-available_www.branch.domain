@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+  ServerName www.<%= branch %>.<%= domain %>
+  DocumentRoot /srv/www/www.<%= branch %>.<%= domain %>/current/public
+  RailsEnv development
+  <Directory /srv/www/www.<%= branch %>.<%= domain %>/current/public>
+    Include /etc/apache2/fragments/basic_auth_or_whitelisted_ip
+  </Directory>
+  ErrorLog /var/log/apache2/www.<%= branch %>.<%= domain %>_error.log
+  CustomLog /var/log/apache2/www.<%= branch %>.<%= domain %>_access.log combined
+</VirtualHost>

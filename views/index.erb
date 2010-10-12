@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>deployr</title>
+  <style>
+  #wrapper {
+    margin:       50px;
+    font-family:  Courier;
+  }
+
+  table {
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border:1px solid black;
+  }
+  table td {
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border:1px solid black;
+    padding:5px;
+  }
+  table td:hover { 
+    background-color:white;
+  }
+  table tr.green td:first-child {
+    background-color:green;
+  }
+  table tr.red td:first-child {
+    background-color:red;
+  }
+  table tr.yellow td:first-child {
+    background-color:yellow;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+  <p><%= @deployr_status %></p>
+  <table>
+    <tr>
+      <th>&nbsp;</th>
+      <th>resource</th>
+      <th>last commit</th>
+      <th>date</th>
+    </tr>
+    <% @statuses.keys.sort {|a, b| (@statuses[b]['last_commit'] ? @statuses[b]['last_commit']['timestamp'] : '--') <=> (@statuses[a]['last_commit'] ? @statuses[a]['last_commit']['timestamp'] : '--')}.each do |ref| %>
+    <% status = @statuses[ref] %>
+    <tr class="<%= status['dirty'] ? 'yellow' : 'green' %>">
+      <td>&nbsp;</td>
+      <td><%= ref %></td>
+      <td>
+        <% if status['dirty'] %>
+          deployed:
+          <% if status['last_commit'] %>
+            <a href="<%= status['last_commit']['url'] %>"><%= escape_html status['last_commit']['message'] %></a> by <%= status['last_commit']['author']['name'] %>
+          <% else %>
+            no idea
+          <% end %>
+          <br />
+          pending:
+          <% if status['last_pending_commit'] %>
+            <a href="<%= status['last_pending_commit']['url'] %>"><%= escape_html status['last_pending_commit']['message'] %></a> by <%= status['last_pending_commit']['author']['name'] %>
+          <% else %>
+            no idea
+          <% end %>
+        <% else %>
+        <% if status['last_commit'] %>
+          <a href="<%= status['last_commit']['url'] %>"><%= escape_html status['last_commit']['message'] %></a> by <%= status['last_commit']['author']['name'] %>
+        <% else %>
+          no idea
+        <% end %>
+        <% end %>
+      </td>
+      <td style="white-space:nowrap">
+        <%= status['last_commit'] ? Time.parse(status['last_commit']['timestamp']).strftime('%d.%m.%y %H:%M') : '--' %>
+        <% if status['dirty'] %>
+        <br /><%= status['last_pending_commit'] ? Time.parse(status['last_pending_commit']['timestamp']).strftime('%d.%m.%y %H:%M') : '--' %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+  </div>
+</body>
+</html>
